@@ -133,9 +133,9 @@ class HBNBCommand(cmd.Cmd):
 
         kwargs = dict()
         if len(args) > 1:
-            pms = args[1].split(" ")
-            pms = [pm for pm in pms if pm]
-            for pm in pms:
+            params = args[1].split(" ")
+            params = [param for param in params if param]
+            for param in params:
                 [name, value] = pm.split("=")
                 if value[0] == '"' and value[-1] == '"':
                     value = value[1:-1].replace('_', ' ')
