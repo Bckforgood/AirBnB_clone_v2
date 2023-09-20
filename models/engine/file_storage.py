@@ -26,14 +26,14 @@ class FileStorage:
         key = "{}.{}".format(type(obj).__name__, obj.id)
         self.all()[key] = obj
 
-    def save(self):
-        """Saves storage dictionary to file"""
-        temp = {}
-        for key, val in self.all().items():
-            temp[key] = val.to_dict()
 
-        with open(FileStorage.__file_path, 'w') as f:
-            json.dump(temp, f)
+    def save(self, obj):
+        """Serializes obj to JSON file"""
+        all_objs = self.all()
+        key = "{}.{}".format(type(obj).__name__, obj.id)
+        all_objs[key] = obj.to_dict()
+        self.__objects = all_objs
+        self.save_to_file()
 
     def reload(self):
         """Loads storage dictionary from file"""

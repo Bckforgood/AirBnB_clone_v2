@@ -1,14 +1,13 @@
 #!/usr/bin/python3
 """This is the base model class for AirBnB"""
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, DateTime
 from datetime import datetime
 import uuid
+from sqlalchemy.ext.declarative import declarative_base
 from models import storage
 
 Base = declarative_base()
 
-class BaseModel:
+class BaseModel(Base):
     """Base class for all models"""
     __abstract__ = True
 
@@ -31,6 +30,7 @@ class BaseModel:
 
     def save(self):
         """Updates updated_at with the current time and saves to storage"""
+        from models import storage  # Import here to avoid circular import
         self.updated_at = datetime.utcnow()
         storage.new(self)
         storage.save()
