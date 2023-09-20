@@ -5,7 +5,7 @@ from datetime import datetime
 import sys
 from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
-from models import storage
+import models
 
 Base = declarative_base()
 
@@ -20,6 +20,7 @@ class BaseModel:
         """Instatntiates a new model"""
         self.id = str(uuid.uuid4())
         if not kwargs:
+            from models import storage
 
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
@@ -51,7 +52,10 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
+        dictionary = {}
+        dictionary.update(self.__dict__)
+        dictionary.update({'__class__':
+            (str(type(self)).split('.')[-1]).split('\'')[0]})
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         if '_sa_instance_state' in dictionary.keys():
@@ -59,4 +63,5 @@ class BaseModel:
         return dictionary
     def delete(self):
         """delete the instance"""
+        from models import storage
         storage.delete(self)
