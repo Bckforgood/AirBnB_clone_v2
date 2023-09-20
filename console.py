@@ -122,9 +122,9 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
             return
         new_instance = HBNBCommand.classes[args]()
+        storage.new(new_instance)
         storage.save()
         print(new_instance.id)
-        storage.save()
 
     def help_create(self):
         """ Help information for the create method """
@@ -321,4 +321,24 @@ class HBNBCommand(cmd.Cmd):
         print("Usage: update <className> <id> <attName> <attVal>\n")
 
 if __name__ == "__main__":
-    HBNBCommand().cmdloop()
+    import sys
+
+    if len(sys.argv) < 2:
+        print("Usage: {} <command>".format(sys.argv[0]))
+        sys.exit(1)
+
+    # Check for the 'create' command and handle it
+    if sys.argv[1] == 'create':
+        # Check if enough arguments are provided
+        if len(sys.argv) < 4:
+            print("Usage: {} create <class_name> <attributes>".format(sys.argv[0]))
+            sys.exit(1)
+
+        # Format the command for the console
+        command = ' '.join(sys.argv[2:])
+        hbnb_cmd = HBNBCommand()
+        hbnb_cmd.onecmd(command)
+    else:
+        if sys.argv[1] not in ['quit', 'EOF']:
+            print("Unknown command: {}".format(sys.argv[1]))
+        HBNBCommand().cmdloop()
