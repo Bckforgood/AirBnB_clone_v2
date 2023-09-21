@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ Console Module """
 import cmd
+import re
 import sys
 from models.base_model import BaseModel
 from models.__init__ import storage
@@ -112,20 +113,24 @@ class HBNBCommand(cmd.Cmd):
     def emptyline(self):
         """ Overrides the emptyline method of CMD """
         pass
-
+    
     def do_create(self, args):
         """ Create an object of any class"""
         ptrn = """(^\w+)"""
         m_found = re.match(ptrn, args)
         args = [s for s in m_found.groups() if s] if m_found else []
+
         if not args:
             print("** class name missing **")
             return
+        
 
         className = args[0]
+
         if className not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
+
         kwargs = dict()
         if len(args) > 1:
             pms = args[1].split(" ")
@@ -143,38 +148,17 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[className]()
 
         for attrName, attrValue in kwargs.items():
-            setattr(new_instance, attrName, attrValue)
+            setattr(new_instance, attrName, attrValue) 
 
         new_instance.save()
+        print(new_instance.id)
+
+      
 
     def help_create(self):
         """ Help information for the create method """
-        if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-        for k, v in storage.all().items():
-            if k.split('.')[0] == args:
-                    print_list.append(str(v))
-            else:
-                args.append(v)
-        else:  # isolate args
-            args = args[2]
-            
-            if args and args[0] == '\"':  # check for quoted arg
-                second_quote = args.find('\"', 1)
-                att_name = args[1:second_quote]
-                args = args[second_quote + 1:]
-
-            args = args.partition(' ')
-
-            # if att_name was not quoted arg
-            
-            if not att_name and args[0] != ' ':
-                att_name = args[0]
-            # check for quoted val arg
-            
-            if args[2] and args[2][0] == '\"':
-                att_val = args[2][1:args[2].find('\"', 1)]
+        print("Creates a class of any type")
+        print("[Usage]: create <className>\n")
 
     def do_show(self, args):
         """ Method to show an individual object """
@@ -309,7 +293,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         # first determine if kwargs or args
-        if '{' in args[2] and '}' in args[2] and type(eval(args[2])) is dict:
+        if '{' in args[2] and '}' in args[2] and type(eval(args[2])) == dict:
             kwargs = eval(args[2])
             args = []  # reformat kwargs into list, ex: [<name>, <value>, ...]
             for k, v in kwargs.items():
@@ -328,7 +312,7 @@ class HBNBCommand(cmd.Cmd):
             if not att_name and args[0] != ' ':
                 att_name = args[0]
             # check for quoted val arg
-            if args[2] and args[2][0] != '\"':
+            if args[2] and args[2][0] == '\"':
                 att_val = args[2][1:args[2].find('\"', 1)]
 
             # if att_val was not quoted arg
@@ -366,24 +350,4 @@ class HBNBCommand(cmd.Cmd):
         print("Usage: update <className> <id> <attName> <attVal>\n")
 
 if __name__ == "__main__":
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Usage: {} <command>".format(sys.argv[0]))
-        sys.exit(1)
-
-    # Check for the 'create' command and handle it
-    if sys.argv[1] == 'create':
-        # Check if enough arguments are provided
-        if len(sys.argv) < 4:
-            print("Usage: {} create <class_name> <attributes>".format(sys.argv[0]))
-            sys.exit(1)
-
-        # Format the command for the console
-        command = ' '.join(sys.argv[2:])
-        hbnb_cmd = HBNBCommand()
-        hbnb_cmd.onecmd(command)
-    else:
-        if sys.argv[1] not in ['quit', 'EOF']:
-            print("Unknown command: {}".format(sys.argv[1]))
-        HBNBCommand().cmdloop()
+    HBNBCommand().cmdloop()

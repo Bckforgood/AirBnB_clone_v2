@@ -9,7 +9,7 @@ class FileStorage:
 
     def all(self, cls=None):
         """
-        Returns a dictionary of models currently in storage. If cls is specified,
+        Returns a dictionary of models currently  If cls is specified,
         returns a dictionary of models of the specified class.
         """
         if cls is None:
@@ -68,4 +68,3 @@ class FileStorage:
         if obj is not None:
             key = "{}.{}".format(type(obj).__name__, obj.id)
             self.all().pop(key, None)
-
