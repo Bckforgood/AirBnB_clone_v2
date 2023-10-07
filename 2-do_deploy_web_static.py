@@ -8,7 +8,7 @@ from os.path import exists
 import os
 
 # Update these with your actual server IPs and SSH key file
-env.hosts = ['<IP web-01>', '<IP web-02>']
+env.hosts = ['<54.90.54.242>', '<54.227.200.179>']
 env.key_filename = "<path to your SSH key file>"
 
 
