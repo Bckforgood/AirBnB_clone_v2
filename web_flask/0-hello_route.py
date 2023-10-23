@@ -11,6 +11,5 @@ def hello_hbnb():
     """ hello route method """
     return 'Hello HBNB!'
 
-
 if __name__ == '__main__':
     app.run(debug=True)
